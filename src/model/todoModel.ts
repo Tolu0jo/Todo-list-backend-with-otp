@@ -5,6 +5,7 @@ interface todoInstance{
     description:string
     status:boolean
     title:string
+    userId: string
 }
 
 const todoSchema=new Schema({
@@ -17,6 +18,11 @@ const todoSchema=new Schema({
     status:{
         type:Boolean
     },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
    
 },{  timestamps: true,
      toJSON:{

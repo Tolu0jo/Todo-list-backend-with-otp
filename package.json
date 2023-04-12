@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "transpile": "tsc -w",
-    "dev": "nodemon dist/index.js"
+    "dev": "nodemon dist/app.js"
   },
   "dependencies": {
     "dotenv": "^16.0.3",

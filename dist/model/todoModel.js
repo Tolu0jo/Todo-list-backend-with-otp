@@ -34,6 +34,11 @@ const todoSchema = new mongoose_1.Schema({
     status: {
         type: Boolean
     },
+    userId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
 }, { timestamps: true,
     toJSON: {
         transform(doc, ret) {
