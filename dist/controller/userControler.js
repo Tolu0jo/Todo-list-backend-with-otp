@@ -12,9 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
+exports.login = exports.register = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 const argon2_1 = __importDefault(require("argon2"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const jwtsecret = process.env.JWT_SECRET;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, confirmPassword } = req.body;
@@ -38,3 +40,27 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.register = register;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        const registeredUser = yield userModel_1.default.findOne({ email });
+        if (!registeredUser) {
+            res.status(400).json({ message: 'Kindly register' });
+        }
+        if (!(yield argon2_1.default.verify((registeredUser === null || registeredUser === void 0 ? void 0 : registeredUser.password) || "", password))) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+        const token = jsonwebtoken_1.default.sign({ email }, jwtsecret, { expiresIn: "30d" });
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+        return res
+            .status(200)
+            .json({ msg: "Welcome", registeredUser, token });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.login = login;

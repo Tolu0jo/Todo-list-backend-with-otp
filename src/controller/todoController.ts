@@ -1,27 +1,26 @@
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import Todo from "../model/todoModel";
 
-export const createTodo = async (req: Request, res: Response) => {
-    try {
-      const { title, description, status } = req.body;
-      //const createdBy = req.user.id; // user ID from authentication middleware
-  
-      const todo = new Todo({
-        title,
-        description,
-        status,
-       // createdBy,
-      });
-  
-      await todo.save();
-  
-      res.status(201).send({ message: "Todo created successfully", todo });
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: "Internal server error" });
-    }
-  };
-  
+export const createTodo = async (req: Request | any, res: Response) => {
+  try {
+    const { title, description, status } = req.body;
+    const createdBy = req.user.id;
+
+    const todo = new Todo({
+      title,
+      description,
+      status,
+      createdBy,
+    });
+
+    await todo.save();
+
+    res.status(201).send({ message: "Todo created successfully", todo });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: "Internal server error" });
+  }
+};
 
 export const getAllTodo = async (req: Request, res: Response) => {
   try {
@@ -45,8 +44,7 @@ export const updateTodo = async (req: Request, res: Response) => {
       description,
       status,
     });
-    res.status(200).json({ message: "Todos updated successfully", todo});
-
+    res.status(200).json({ message: "Todos updated successfully", todo });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Internal server error" });
