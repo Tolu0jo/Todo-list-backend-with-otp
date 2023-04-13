@@ -17,17 +17,19 @@ const todoModel_1 = __importDefault(require("../model/todoModel"));
 const createTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, description, status } = req.body;
+        //const createdBy = req.user.id; // user ID from authentication middleware
         const todo = new todoModel_1.default({
             title,
             description,
             status,
+            // createdBy,
         });
         yield todo.save();
-        res.status(201).json({ message: "Todo created successfully", todo });
+        res.status(201).send({ message: "Todo created successfully", todo });
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).send({ message: "Internal server error" });
     }
 });
 exports.createTodo = createTodo;

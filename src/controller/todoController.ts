@@ -2,23 +2,26 @@ import { Request, Response } from "express";
 import Todo from "../model/todoModel";
 
 export const createTodo = async (req: Request, res: Response) => {
-  try {
-    const { title, description, status } = req.body;
-
-    const todo = new Todo({
-      title,
-      description,
-      status,
-    });
-
-    await todo.save();
-
-    res.status(201).json({ message: "Todo created successfully", todo });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+    try {
+      const { title, description, status } = req.body;
+      //const createdBy = req.user.id; // user ID from authentication middleware
+  
+      const todo = new Todo({
+        title,
+        description,
+        status,
+       // createdBy,
+      });
+  
+      await todo.save();
+  
+      res.status(201).send({ message: "Todo created successfully", todo });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  };
+  
 
 export const getAllTodo = async (req: Request, res: Response) => {
   try {
