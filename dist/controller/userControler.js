@@ -16,16 +16,19 @@ exports.login = exports.register = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 const argon2_1 = __importDefault(require("argon2"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const jwtsecret = process.env.JWT_SECRET;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, confirmPassword } = req.body;
         const hashedPassword = yield argon2_1.default.hash(password, { hashLength: 10 });
+        console.log(hashedPassword);
         const oldUser = yield userModel_1.default.findOne({ email });
         if (oldUser) {
             return res.status(400).json({ message: "email already exist" });
         }
-        if (yield argon2_1.default.verify(hashedPassword, confirmPassword)) {
+        if (!(yield argon2_1.default.verify(hashedPassword, confirmPassword))) {
             return res.status(400).json({ message: "password and confirmPassword does not match" });
         }
         const newUser = new userModel_1.default({
@@ -50,7 +53,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!(yield argon2_1.default.verify((registeredUser === null || registeredUser === void 0 ? void 0 : registeredUser.password) || "", password))) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
-        const token = jsonwebtoken_1.default.sign({ email }, jwtsecret, { expiresIn: "30d" });
+        const token = jsonwebtoken_1.default.sign({ id: registeredUser === null || registeredUser === void 0 ? void 0 : registeredUser.id }, jwtsecret, { expiresIn: "30d" });
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 30 * 24 * 60 * 60 * 1000,

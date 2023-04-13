@@ -15,8 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const todo_1 = __importDefault(require("./routes/todo"));
+const user_1 = __importDefault(require("./routes/user"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const initializeConfig = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -30,7 +32,9 @@ const initializeConfig = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)("dev"));
+app.use((0, cookie_parser_1.default)());
 app.use("/todo", todo_1.default);
+app.use("/user", user_1.default);
 const port = 5050;
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     yield initializeConfig();

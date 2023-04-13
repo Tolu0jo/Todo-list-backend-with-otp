@@ -4,13 +4,14 @@ import Todo from "../model/todoModel";
 export const createTodo = async (req: Request | any, res: Response) => {
   try {
     const { title, description, status } = req.body;
-    const createdBy = req.user.id;
+    const userId = req.user.id;
+    console.log(req.user)
 
     const todo = new Todo({
       title,
       description,
       status,
-      createdBy,
+      userId,
     });
 
     await todo.save();
@@ -69,11 +70,11 @@ export const deleteTodo = async (req: Request, res: Response) => {
   }
 };
 
-export const getTodosCreatedByUser = async (req: Request, res: Response) => {
+export const getTodosCreatedByUser = async (req: Request|any, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userId } = req.user.id
 
-    const todos = await Todo.find({ createdBy: id });
+    const todos = await Todo.find({ userId});
 
     res.status(200).json({ message: "Todos retrieved successfully", todos });
   } catch (error) {

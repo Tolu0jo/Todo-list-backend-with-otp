@@ -1,12 +1,14 @@
 import express, {Response,Request}from "express"
-import { createTodo, deleteTodo, getAllTodo, getTodobyId, updateTodo } from "../controller/todoController"
+import { auth } from "../auth"
+import { createTodo, deleteTodo, getAllTodo, getTodobyId, getTodosCreatedByUser, updateTodo } from "../controller/todoController"
 
 const router = express.Router()
 
-router.post('/create',createTodo)
+router.post('/create',auth,createTodo)
 router.get('/',getAllTodo)
-router.get("/getTodo/:id",getTodobyId)
-router.patch('/updateTodo/:id',updateTodo)
-router.delete("/deleteTodo/:id",deleteTodo)
+router.get("/getTodo/:id",auth,getTodobyId)
+router.get("/mytodo",auth,getTodosCreatedByUser)
+router.patch('/updateTodo/:id',auth,updateTodo)
+router.delete("/deleteTodo/:id",auth,deleteTodo)
 
 export default router

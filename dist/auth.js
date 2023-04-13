@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = __importDefault(require("./model/userModel"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const jwtsecret = process.env.JWT_SECRET;
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -28,8 +30,8 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 .status(401)
                 .json({ error: "token invalid,you cant access this route" });
         }
-        const { email } = verified; //id is a sting instead of doing interface
-        const user = yield userModel_1.default.findOne({ email });
+        const { id } = verified;
+        const user = yield userModel_1.default.findOne({ _id: id });
         if (!user) {
             return res.status(401).json({ error: "kindly register as a user" });
         }
@@ -37,7 +39,8 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         next();
     }
     catch (err) {
-        res.status(401).json({ error: "User not logged in" });
+        res.status(500).json({ error: "Internal server error" });
+        console.log(err);
     }
 });
 exports.auth = auth;

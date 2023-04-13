@@ -1,8 +1,11 @@
 import express, { Application } from "express";
 import logger from "morgan";
 import todoRouter from "./routes/todo";
-import mongoose, { ConnectOptions } from "mongoose";
+import userRouter from "./routes/user";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser"
+
 
 dotenv.config();
 
@@ -22,7 +25,10 @@ const initializeConfig = async () => {
 
 app.use(express.json());
 app.use(logger("dev"));
+app.use(cookieParser());
+
 app.use("/todo", todoRouter);
+app.use("/user", userRouter);
 
 const port: number = 5050;
 

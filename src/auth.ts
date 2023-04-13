@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import User from "./model/userModel";
+import dotenv from "dotenv";
+
+dotenv.config();
 const jwtsecret = process.env.JWT_SECRET as string;
 
 export const auth =  async (
@@ -16,16 +19,16 @@ export const auth =  async (
     }
 
     let verified = jwt.verify(authorization, jwtsecret);
-
+   
     if (!verified) {
       return res
         .status(401)
         .json({ error: "token invalid,you cant access this route" });
     }
 
-    const { email } = verified as { [key: string]: string }; //id is a sting instead of doing interface
+    const { id } = verified as { [key: string]: string }; 
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ _id:id });
 
     if (!user) {
       return res.status(401).json({ error: "kindly register as a user" });
@@ -35,6 +38,7 @@ export const auth =  async (
 
     next();
   } catch (err) {
-    res.status(401).json({ error: "User not logged in" });
+    res.status(500).json({ error: "Internal server error" });
+    console.log(err)
   }
 }

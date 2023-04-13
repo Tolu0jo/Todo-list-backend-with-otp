@@ -17,12 +17,13 @@ const todoModel_1 = __importDefault(require("../model/todoModel"));
 const createTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, description, status } = req.body;
-        const createdBy = req.user.id;
+        const userId = req.user.id;
+        console.log(req.user);
         const todo = new todoModel_1.default({
             title,
             description,
             status,
-            createdBy,
+            userId,
         });
         yield todo.save();
         res.status(201).send({ message: "Todo created successfully", todo });
@@ -82,8 +83,8 @@ const deleteTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.deleteTodo = deleteTodo;
 const getTodosCreatedByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        const todos = yield todoModel_1.default.find({ createdBy: id });
+        const { userId } = req.user.id;
+        const todos = yield todoModel_1.default.find({ userId });
         res.status(200).json({ message: "Todos retrieved successfully", todos });
     }
     catch (error) {
