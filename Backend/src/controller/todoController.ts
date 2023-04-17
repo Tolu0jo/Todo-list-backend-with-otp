@@ -3,14 +3,14 @@ import Todo from "../model/todoModel";
 
 export const createTodo = async (req: Request | any, res: Response) => {
   try {
-    const { title, description, status } = req.body;
+    const { title, description, completed } = req.body;
     const userId = req.user.id;
     console.log(req.user)
 
     const todo = new Todo({
       title,
       description,
-      status,
+      completed,
       userId,
     });
 
@@ -39,11 +39,11 @@ export const updateTodo = async (req: Request, res: Response) => {
     if (!id) {
       res.status(404).json({ message: "Todo not found" });
     }
-    const { title, description, status } = req.body;
+    const { title, description, completed } = req.body;
     const todo = await Todo.findByIdAndUpdate(id, {
       title,
       description,
-      status,
+      completed,
     });
     res.status(200).json({ message: "Todos updated successfully", todo });
   } catch (error) {

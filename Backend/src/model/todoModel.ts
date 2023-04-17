@@ -3,7 +3,7 @@ import mongoose,{Schema} from "mongoose"
 interface todoInstance{
     _id:string
     description:string
-    status:boolean
+    completed:boolean
     title:string
     userId: string
 }
@@ -15,12 +15,11 @@ const todoSchema=new Schema({
     title:{
         type:String,required:true
     },
-    status:{
+    completed:{
         type:Boolean
     },
     userId: {
         type: Schema.Types.ObjectId,
-        
         required: true,
       },
    
