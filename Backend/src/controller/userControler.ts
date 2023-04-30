@@ -3,6 +3,7 @@ import User from "../model/userModel";
 import argon2 from "argon2"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
+import { generateOtp } from "../utils/notification";
 dotenv.config();
 
 const jwtsecret = process.env.JWT_SECRET as string;
@@ -12,7 +13,11 @@ export const register = async (req: Request, res: Response) => {
     const { email, password, confirmPassword } = req.body;
  
     const hashedPassword =await argon2.hash(password,{hashLength: 10})
-    console.log(hashedPassword) 
+   
+      //generate otp
+
+      const {otp,expiry}=generateOtp();
+     
     const oldUser = await User.findOne({ email });
     if (oldUser) {
       return res.status(400).json({ message: "email already exist" });
@@ -23,11 +28,15 @@ export const register = async (req: Request, res: Response) => {
     const newUser=new User({
         email,
         password:hashedPassword,
+        otp,
+        expiry_otp:expiry,
+      
     })
 
     await newUser.save()
     
-    return res.status(201).json({message:"You are Sucessfully registered"})
+    
+    return res.status(201).json({message:"You are Sucessfully registered",newUser})
 
   } catch (error) {
     console.log(error);

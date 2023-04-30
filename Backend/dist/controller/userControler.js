@@ -17,13 +17,15 @@ const userModel_1 = __importDefault(require("../model/userModel"));
 const argon2_1 = __importDefault(require("argon2"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const notification_1 = require("../utils/notification");
 dotenv_1.default.config();
 const jwtsecret = process.env.JWT_SECRET;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, confirmPassword } = req.body;
         const hashedPassword = yield argon2_1.default.hash(password, { hashLength: 10 });
-        console.log(hashedPassword);
+        //generate otp
+        const { otp, expiry } = (0, notification_1.generateOtp)();
         const oldUser = yield userModel_1.default.findOne({ email });
         if (oldUser) {
             return res.status(400).json({ message: "email already exist" });
@@ -34,9 +36,11 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = new userModel_1.default({
             email,
             password: hashedPassword,
+            otp,
+            expiry_otp: expiry,
         });
         yield newUser.save();
-        return res.status(201).json({ message: "You are Sucessfully registered" });
+        return res.status(201).json({ message: "You are Sucessfully registered", newUser });
     }
     catch (error) {
         console.log(error);

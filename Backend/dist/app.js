@@ -22,7 +22,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const initializeConfig = () => __awaiter(void 0, void 0, void 0, function* () {
+const databaseConfig = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(process.env.DATABASE_URL);
         console.log('Connected to MongoDb');
@@ -39,6 +39,6 @@ app.use("/todo", todo_1.default);
 app.use("/user", user_1.default);
 const port = 5050;
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
-    yield initializeConfig();
+    yield databaseConfig();
     console.log(`listening at port ${port}...`);
 }));

@@ -30,6 +30,18 @@ const userSchema = new mongoose_1.Schema({
     },
     password: {
         type: String, required: true
+    },
+    otp: {
+        type: Number,
+        required: true,
+    },
+    expiry_otp: {
+        type: Date,
+        required: true,
+    },
+    verified: {
+        type: Boolean,
+        default: false
     }
 }, {
     toJSON: {

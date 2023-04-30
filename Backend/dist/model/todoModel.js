@@ -31,7 +31,7 @@ const todoSchema = new mongoose_1.Schema({
     title: {
         type: String, required: true
     },
-    status: {
+    completed: {
         type: Boolean
     },
     userId: {

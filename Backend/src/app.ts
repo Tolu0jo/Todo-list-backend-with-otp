@@ -15,7 +15,7 @@ const app: Application = express();
 
 
 
-const initializeConfig = async () => {
+const databaseConfig = async () => {
   try {
     await mongoose.connect(process.env.DATABASE_URL!);
     console.log('Connected to MongoDb')
@@ -35,6 +35,6 @@ app.use("/user", userRouter);
 const port: number = 5050;
 
 app.listen(port, async() => {
-  await initializeConfig()
+  await databaseConfig()
   console.log(`listening at port ${port}...`);
 });

@@ -16,13 +16,13 @@ exports.getTodobyId = exports.getTodosCreatedByUser = exports.deleteTodo = expor
 const todoModel_1 = __importDefault(require("../model/todoModel"));
 const createTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { title, description, status } = req.body;
+        const { title, description, completed } = req.body;
         const userId = req.user.id;
         console.log(req.user);
         const todo = new todoModel_1.default({
             title,
             description,
-            status,
+            completed,
             userId,
         });
         yield todo.save();
@@ -51,11 +51,11 @@ const updateTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!id) {
             res.status(404).json({ message: "Todo not found" });
         }
-        const { title, description, status } = req.body;
+        const { title, description, completed } = req.body;
         const todo = yield todoModel_1.default.findByIdAndUpdate(id, {
             title,
             description,
-            status,
+            completed,
         });
         res.status(200).json({ message: "Todos updated successfully", todo });
     }

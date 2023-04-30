@@ -4,6 +4,9 @@ interface UserInstance{
     _id:string
     email:string
     password:string
+    otp:Number,
+    expiry_otp:Date
+    verified:Boolean
 }
 const userSchema=new Schema({
    email:{
@@ -11,6 +14,18 @@ const userSchema=new Schema({
     },
     password:{
         type:String,required:true
+    }, 
+      otp: {
+        type:Number,
+        required: true,
+      },
+     expiry_otp: {
+        type:Date,
+        required: true,
+      },
+    verified:{
+        type:Boolean,
+        default:false
     }
    
 },{  
