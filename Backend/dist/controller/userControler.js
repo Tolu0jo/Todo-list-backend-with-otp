@@ -18,11 +18,12 @@ const argon2_1 = __importDefault(require("argon2"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const notification_1 = require("../utils/notification");
+const config_1 = require("../config");
 dotenv_1.default.config();
 const jwtsecret = process.env.JWT_SECRET;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password, confirmPassword } = req.body;
+        const { email, password, confirmPassword, phone } = req.body;
         const hashedPassword = yield argon2_1.default.hash(password, { hashLength: 10 });
         //generate otp
         const { otp, expiry } = (0, notification_1.generateOtp)();
@@ -38,7 +39,13 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             password: hashedPassword,
             otp,
             expiry_otp: expiry,
+            phone
         });
+        //send otp to user 
+        yield (0, notification_1.onRequestOTP)(otp, phone);
+        //send mail to user
+        const html = (0, notification_1.emailHtml)(otp);
+        yield (0, notification_1.sendMail)(config_1.FromAdminMail, email, config_1.userSubject, html);
         yield newUser.save();
         return res.status(201).json({ message: "You are Sucessfully registered", newUser });
     }

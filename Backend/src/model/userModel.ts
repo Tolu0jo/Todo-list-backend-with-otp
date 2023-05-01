@@ -5,12 +5,14 @@ interface UserInstance{
     email:string
     password:string
     otp:Number,
-    expiry_otp:Date
-    verified:Boolean
+    expiry_otp:Date,
+    verified:Boolean,
+    phone:string
 }
 const userSchema=new Schema({
    email:{
-        type:String,required:true
+        type:String,
+        required:true
     },
     password:{
         type:String,required:true
@@ -26,6 +28,10 @@ const userSchema=new Schema({
     verified:{
         type:Boolean,
         default:false
+    },
+    phone:{
+      type:String,
+      required:true
     }
    
 },{  

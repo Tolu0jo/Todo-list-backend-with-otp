@@ -3,14 +3,15 @@ import User from "../model/userModel";
 import argon2 from "argon2"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
-import { generateOtp } from "../utils/notification";
+import { emailHtml, generateOtp, onRequestOTP, sendMail } from "../utils/notification";
+import { FromAdminMail, userSubject } from "../config";
 dotenv.config();
 
 const jwtsecret = process.env.JWT_SECRET as string;
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, confirmPassword } = req.body;
+    const { email, password, confirmPassword, phone } = req.body;
  
     const hashedPassword =await argon2.hash(password,{hashLength: 10})
    
@@ -29,9 +30,16 @@ export const register = async (req: Request, res: Response) => {
         email,
         password:hashedPassword,
         otp,
-        expiry_otp:expiry,
-      
+        expiry_otp:expiry, 
+        phone 
     })
+   //send otp to user 
+    await onRequestOTP(otp,phone) 
+
+    //send mail to user
+    const html =  emailHtml(otp)
+     
+   await sendMail(FromAdminMail,email,userSubject,html)
 
     await newUser.save()
     
