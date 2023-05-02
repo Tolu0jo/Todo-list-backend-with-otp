@@ -9,6 +9,8 @@ import {
   userSubject,
 } from "../config";
 
+
+
 export const generateOtp = () => {
   const otp = Math.floor(1000 + Math.random() * 9000);
   const expiry = new Date();
@@ -73,5 +75,5 @@ export const emailHtml = (otp: number) => {
   </div>
 </div>
 `;
-  return temp;
+return temp
 };
