@@ -1,8 +1,1 @@
-GvM6LwAMR7KMwby8
-
-
-var pipeline=[
-    {$sort:{price:1}},
-    {$skip:2}
-    ]
-db.product.aggregate(pipeline);
+This is a todolist express backend making use of OTP verifications
